@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { getUserMedia, wait } from '../utils'
+import VideoPlayer from './VideoPlayer'
 
 function VideoRecorder({ constraints }) {
   const [error, setError] = useState('')
   const videoEl = useRef()
-  const recordingEl = useRef()
+  // const recordingEl = useRef()
   const recorder = useRecorder(constraints, videoEl)
   
   const handleStart = async () => {
@@ -19,7 +20,8 @@ function VideoRecorder({ constraints }) {
   useEffect(() => {
     if(recorder.isFinished && recorder.chunks.length !== 0) {
       const recordedBlob = new Blob(recorder.chunks, { type: 'video/webm' })
-      recordingEl.current.src = URL.createObjectURL(recordedBlob)
+      videoEl.current.src = URL.createObjectURL(recordedBlob)
+      videoEl.current.srcObject = null
     }
   }, [recorder.isFinished, recorder.chunks])
 
@@ -27,8 +29,9 @@ function VideoRecorder({ constraints }) {
     <main>
       <h2>Preview</h2>
       {error && <div className="error">{error}</div>}
-      <video ref={videoEl} muted autoPlay style={{ display: !recorder.isFinished || recorder.chunks.length === 0 ? 'block' : 'none'}}></video>
-      <video ref={recordingEl} controls style={{ display: recorder.isFinished && recorder.chunks.length !== 0 ? 'block' : 'none'}}></video>
+      <VideoPlayer ref={videoEl} isRecordingFinished={recorder.isFinished} />
+      {/* <video ref={videoEl} muted autoPlay style={{ display: !recorder.isFinished || recorder.chunks.length === 0 ? 'block' : 'none'}}></video>
+      <video ref={recordingEl} controls style={{ display: recorder.isFinished && recorder.chunks.length !== 0 ? 'block' : 'none'}}></video> */}
       <div className="buttons">
         <button onClick={handleStart}>Start</button>
       </div>
