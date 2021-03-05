@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { getUserMedia, wait } from '../utils'
 
-function VideoRecorder({ constraints }) {
+function VideoRecorder({ constraints, lengthMs = 5000 }) {
   const [error, setError] = useState('')
   const videoEl = useRef()
   const recordingEl = useRef()
-  const recorder = useRecorder(constraints, videoEl)
+  const recorder = useRecorder(constraints, lengthMs, videoEl)
   
   const handleStart = async () => {
     try {
@@ -40,7 +40,7 @@ function VideoRecorder({ constraints }) {
   )
 }
 
-function useRecorder(constraints, vdRef) {
+function useRecorder(constraints, lengthMs, vdRef) {
   const [isRecording, setIsRecording] = useState(false)
   const [isRecordingFinished, setIsRecordingFinished] = useState(true)
   const [stream, setStream] = useState()
@@ -107,7 +107,7 @@ function useRecorder(constraints, vdRef) {
       recorder.current.onerror = reject
     })
 
-    const recorded = wait(5000)
+    const recorded = wait(lengthMs)
       .then(() => {
         if(isRecording) {
           setIsRecordingFinished(true)

@@ -7,7 +7,7 @@ function App() {
   return (
     <div>
       <h1>Record Your Video!</h1>
-      <VideoRecorder maxRecordingMS={5000} constraints={constraints} />
+      <VideoRecorder maxRecordingMS={7000} constraints={constraints} />
     </div>
   );
 }
