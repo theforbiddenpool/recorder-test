@@ -16,6 +16,10 @@ function VideoRecorder({ constraints }) {
     }
   }
 
+  const handleStop = async () => {
+    recorder.stop()
+  }
+
   useEffect(() => {
     if(recorder.isFinished && recorder.chunks.length !== 0) {
       const recordedBlob = new Blob(recorder.chunks, { type: 'video/webm' })
@@ -25,12 +29,12 @@ function VideoRecorder({ constraints }) {
 
   return (
     <main>
-      <h2>Preview</h2>
       {error && <div className="error">{error}</div>}
       <video ref={videoEl} muted autoPlay style={{ display: !recorder.isFinished || recorder.chunks.length === 0 ? 'block' : 'none'}}></video>
       <video ref={recordingEl} controls style={{ display: recorder.isFinished && recorder.chunks.length !== 0 ? 'block' : 'none'}}></video>
       <div className="buttons">
         <button onClick={handleStart}>Start</button>
+        <button onClick={handleStop} disabled={!recorder.isRecording && recorder.isFinished}>Stop</button>
       </div>
     </main>
   )
@@ -104,13 +108,18 @@ function useRecorder(constraints, vdRef) {
     })
 
     const recorded = wait(5000)
-      .then(() => isRecording && setIsRecordingFinished(true) && setIsRecording(false))
+      .then(() => {
+        if(isRecording) {
+          setIsRecordingFinished(true)
+          setIsRecording(false)
+        }
+      })
     
       
     return Promise.all([stopped, recorded])
   }
 
-  return { start, stop, chunks: recordedChunks, isFinished: isRecordingFinished }
+  return { start, stop, chunks: recordedChunks, isFinished: isRecordingFinished, isRecording }
 }
 
 export default VideoRecorder
