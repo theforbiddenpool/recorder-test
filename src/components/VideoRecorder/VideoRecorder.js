@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRecorder } from './useRecorder'
 
-function VideoRecorder({ constraints, lengthMs = 5000 }) {
+function VideoRecorder({ constraints, maxRecordingMS = 5000 }) {
   const [error, setError] = useState('')
   const videoEl = useRef()
   const recordingEl = useRef()
-  const recorder = useRecorder(constraints, lengthMs, videoEl)
+  const recorder = useRecorder(constraints, maxRecordingMS, videoEl)
   
   const handleStart = async () => {
     try {
