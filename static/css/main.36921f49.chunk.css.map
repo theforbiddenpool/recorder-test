@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/styles/styles.css"],"names":[],"mappings":"AAAA,MACE,WAAY,CACZ,YACF","file":"main.36921f49.chunk.css","sourcesContent":["video {\n  width: 640px;\n  height: 480px;\n}"]}
